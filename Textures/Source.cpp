@@ -19,8 +19,8 @@
 #include "SimpleBulletWrapper\PhysicsWorld.h"
 
 //GUI
-#include "imgui.h"
-#include "imgui_impl_glfw_gl3.h"
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw_gl3.h"
 
 //Other
 #include "shader.h"
@@ -212,6 +212,7 @@ int main()
 	PhysicsBox groundBox(false, 10.0, 10.0, 10.0, 10.0, glm::vec3(0, -5, 0), glm::vec3(0, 0, 0), false, world);
 	Mesh groundMesh(getCubeVertices(10.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
 	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+	//lol
 
 	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 0), glm::vec3(45, 0, 0), false, world);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
