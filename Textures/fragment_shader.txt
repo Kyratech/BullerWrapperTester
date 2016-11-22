@@ -1,0 +1,25 @@
+#version 330 core
+
+in vec3 Normal;
+in vec3 Fragment_position;
+
+out vec4 colour;
+
+uniform vec3 fragment_colour;
+uniform vec3 light_colour;
+uniform vec3 light_position;
+
+void main()
+{
+	float ambientStrength = 0.5f;
+	vec3 ambient = ambientStrength * light_colour;
+
+	vec3 norm = normalize(Normal);
+	vec3 light_direction = normalize(light_position - Fragment_position);
+
+	float diffuse_level = max(dot(norm, light_direction), 0.0);
+	vec3 diffuse_light = diffuse_level * light_colour;
+
+	vec3 result = fragment_colour * (ambient + diffuse_light);
+	colour = vec4(result, 1.0f);
+}
