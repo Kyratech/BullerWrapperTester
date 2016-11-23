@@ -132,6 +132,7 @@
     <ClInclude Include="3d_camera.h" />
     <ClInclude Include="cone_mesh.h" />
     <ClInclude Include="cube_mesh.h" />
+    <ClInclude Include="cylinder_mesh.h" />
     <ClInclude Include="fps_camera.h" />
     <ClInclude Include="ImGUI\imconfig.h" />
     <ClInclude Include="ImGUI\imgui.h" />
