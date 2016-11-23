@@ -29,6 +29,7 @@
 #include "game_object.h"
 #include "cube_mesh.h"
 #include "plane_mesh.h"
+#include "cone_mesh.h"
 
 #include <iostream>
 #include<vector>
@@ -212,15 +213,16 @@ int main()
 	PhysicsBox groundBox(false, 10.0, 10.0, 10.0, 10.0, glm::vec3(0, -5, 0), glm::vec3(0, 0, 0), false, world);
 	Mesh groundMesh(getCubeVertices(10.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
 	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
-	//lol
 
 	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 0), glm::vec3(45, 0, 0), false, world);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
 
-	PhysicsBox littleBox(true, 0.5, 0.5, 0.5, 0.25, glm::vec3(0, 5, 0), glm::vec3(0, 45, 0), false, world);
-	Mesh littleBoxMesh(getCubeVertices(0.5), getCubeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
-	GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleBox);
+	PhysicsCone littleCone(true, 1, 1, 0.25, glm::vec3(0, 5, 0), glm::vec3(1, 0, 0), false, world);
+	Mesh littleBoxMesh(getConeVertices(1, 1), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCone);
+
+
 
 	//==============//
 	//Light position//
@@ -261,7 +263,7 @@ int main()
 
 		if (ImGui::Button("Reset"))
 		{
-			littleBox.resetTransform();
+			littleCone.resetTransform();
 			bigBox.resetTransform();
 
 			//Brief update to move the objects even if simulation isn't running
