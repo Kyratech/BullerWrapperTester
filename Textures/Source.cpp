@@ -211,19 +211,21 @@ int main()
 	GameObject cubeObject2(&cubeMesh2, glm::vec3(0.0f, 0.0f, 0.0f), fallRigidBody2, dynamicsWorld);
 	*/
 
-	PhysicsBox groundBox(false, 10.0, 10.0, 10.0, 10.0, glm::vec3(0, -5, 0), glm::vec3(0, 0, 0), false, world);
-	Mesh groundMesh(getCubeVertices(10.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
+	PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(0, 0, 0), false, world);
+	Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
 	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
 
-	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 5), glm::vec3(45, 0, 0), false, world);
+	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 0.2), glm::vec3(45, 0, 0), false, world);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
 
-	PhysicsCylinder littleCylinder(true, 1, 1, 1, 1, glm::vec3(0, 5, 0), glm::vec3(80, 0, 90), false, world);
-	Mesh littleBoxMesh(getCylinderVertices(1, 1, 1), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	PhysicsCylinder littleCylinder(true, 0.5, 0.5, 0.5, 0.5, glm::vec3(0, 5, 0), glm::vec3(80, 0, 90), false, world);
+	Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
 
-
+	PhysicsCone mediumCone(false, 1.0, 1.0, 1.0, glm::vec3(0.2, 2, 0.2), glm::vec3(180, 0, 0), false, world);
+	Mesh mediumConeMesh(getConeVertices(1, 1), getConeIndices(), glm::vec4(0.5f, 0.5f, 1.0f, 1.0f));
+	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
 
 	//==============//
 	//Light position//
@@ -321,6 +323,7 @@ int main()
 		groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 
 		// ImGui functions end here
 		ImGui::Render();
