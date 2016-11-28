@@ -146,6 +146,7 @@
     <ClInclude Include="plane_mesh.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="TerrainUtilities.h" />
+    <ClInclude Include="terrain_mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="crash_crate.png" />

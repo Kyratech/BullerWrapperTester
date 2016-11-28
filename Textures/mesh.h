@@ -31,6 +31,8 @@ class Mesh
 
 		void Draw(Shader myShader, glm::vec3 lightPos)
 		{
+			//glPrimitiveRestartIndex(1138);
+
 			GLint fragmentColourLocation = glGetUniformLocation(myShader.getShaderProgram(), "fragment_colour");
 			GLint lightColourLocation = glGetUniformLocation(myShader.getShaderProgram(), "light_colour");
 			GLint lightPositionLocation = glGetUniformLocation(myShader.getShaderProgram(), "light_position");

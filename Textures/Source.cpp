@@ -17,6 +17,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "SimpleBulletWrapper\PhysicsObjectTypes.h"
 #include "SimpleBulletWrapper\PhysicsWorld.h"
+#include "SimpleBulletWrapper\HeightfieldData.h"
 
 //GUI
 #include "ImGUI/imgui.h"
@@ -31,6 +32,7 @@
 #include "plane_mesh.h"
 #include "cone_mesh.h"
 #include "cylinder_mesh.h"
+#include "terrain_mesh.h"
 
 #include <iostream>
 #include<vector>
@@ -128,6 +130,8 @@ int main()
 	//Turn on depth testing
 	glEnable(GL_DEPTH_TEST);
 
+	//glEnable(GL_PRIMITIVE_RESTART);
+
 	//Shader load
 	Shader ourShader("./vertex_shader.txt", "./fragment_shader.txt");
 
@@ -211,9 +215,16 @@ int main()
 	GameObject cubeObject2(&cubeMesh2, glm::vec3(0.0f, 0.0f, 0.0f), fallRigidBody2, dynamicsWorld);
 	*/
 
-	PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(0, 0, 0), false, world);
-	Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
-	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+	//PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(0, 0, 0), false, world);
+	//Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
+	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+
+	PhysicsHeightmap heightmap("test-gradient.bmp", 15, 15, 1, glm::vec3(0, 0, 0), world);
+	HeightfieldData heightData = heightmap.getHeightMapData();
+	std::vector<GLfloat> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getDepth(), heightData.getWidth(), 15.0, 15.0);
+	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getDepth(), heightData.getWidth());
+	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
+	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, 0.0f, 0.0f), &heightmap);
 
 	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 0.2), glm::vec3(45, 0, 0), false, world);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
@@ -223,7 +234,7 @@ int main()
 	Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
 
-	PhysicsCone mediumCone(false, 1.0, 1.0, 1.0, glm::vec3(0.2, 2, 0.2), glm::vec3(180, 0, 0), false, world);
+	PhysicsCone mediumCone(true, 1.0, 1.0, 1.0, glm::vec3(0.2, 2, 0.2), glm::vec3(180, 0, 0), false, world);
 	Mesh mediumConeMesh(getConeVertices(1, 1), getConeIndices(), glm::vec4(0.5f, 0.5f, 1.0f, 1.0f));
 	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
 
@@ -320,7 +331,8 @@ int main()
 		// Draw objects //
 		//==============//
 
-		groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		//groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
