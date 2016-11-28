@@ -60,7 +60,7 @@ static std::vector<GLuint> getTerrainIndices(int dataDepth, int dataWidth)
 		{
 			int index = j + i * dataWidth;
 
-			std::cout << "Working on ind: " << counter << " / " << (dataDepth - 1) * (dataWidth - 1) << std::endl;
+			//std::cout << "Working on ind: " << counter << " / " << (dataDepth - 1) * (dataWidth - 1) << std::endl;
 
 			/*   index--------index+1
 					|	\		|
