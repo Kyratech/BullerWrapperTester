@@ -25,14 +25,14 @@ static std::vector<GLfloat> getTerrainVertices(std::vector<float>* data, int dat
 	for (int i = 0; i < data->size(); i++)
 	{
 		int vertexStart = i * 6;
-		int z = i % dataWidth;
-		int x = i / dataWidth;
+		int z = i / dataWidth;
+		int x = i % dataWidth;
 
 		//x
 		vertices[vertexStart] = x * depthSpacing - worldDepth / 2;
 		//y
 		vertices[vertexStart + 1] = (*data)[i];
-		std::cout << (*data)[i] << std::endl;
+		//DEBUG: std::cout << (*data)[i] << std::endl;
 		//z
 		vertices[vertexStart + 2] = z * widthSpacing - worldWidth / 2;
 		//Normals are all up for now

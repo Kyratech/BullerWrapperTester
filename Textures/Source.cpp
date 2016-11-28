@@ -220,10 +220,10 @@ int main()
 	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
 
 	float maxHeight = 7.0f;
-	PhysicsHeightmap heightmap("test-gradient.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
+	PhysicsHeightmap heightmap("wierd-map.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
 	HeightfieldData heightData = heightmap.getHeightMapData();
-	std::vector<GLfloat> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getDepth(), heightData.getWidth(), 15.0, 15.0);
-	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getDepth(), heightData.getWidth());
+	std::vector<GLfloat> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getWidth(), heightData.getDepth(), 15.0, 15.0);
+	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getWidth(), heightData.getDepth());
 	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
 	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, -maxHeight / 2, 0.0f), &heightmap);
 
