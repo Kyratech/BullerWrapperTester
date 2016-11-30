@@ -35,7 +35,9 @@
 #include "terrain_mesh.h"
 
 #include <iostream>
-#include<vector>
+#include <vector>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void mouse_movement(GLFWwindow *window, double xPos, double yPos);
@@ -159,7 +161,7 @@ int main()
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 	*/
 
-	PhysicsWorld* world = new PhysicsWorld(glm::vec3(0, -10, 0));
+	PhysicsWorld* world = new PhysicsWorld(glm::vec3(0, -10, 0), false);
 
 	//==================//
 	//Set up the objects//
@@ -215,29 +217,30 @@ int main()
 	GameObject cubeObject2(&cubeMesh2, glm::vec3(0.0f, 0.0f, 0.0f), fallRigidBody2, dynamicsWorld);
 	*/
 
-	//PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(0, 0, 0), false, world);
-	//Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
-	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
-
 	float maxHeight = 7.0f;
-	PhysicsHeightmap heightmap("wierd-map.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
+	PhysicsHeightmap heightmap("pyramid.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
+	
 	HeightfieldData heightData = heightmap.getHeightMapData();
 	std::vector<GLfloat> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getWidth(), heightData.getDepth(), 15.0, 15.0);
 	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getWidth(), heightData.getDepth());
 	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
 	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, -maxHeight / 2, 0.0f), &heightmap);
 
-	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(45, 0, 0), false, world);
+	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(45, 0, 0), world);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
 
-	PhysicsCylinder littleCylinder(true, 0.5, 0.5, 0.5, 0.5, glm::vec3(5, 5, 0), glm::vec3(80, 0, 90), false, world);
-	Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
-	GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
-
-	//PhysicsCone mediumCone(true, 1.0, 1.0, 1.0, glm::vec3(0.2, 2, 0.2), glm::vec3(180, 0, 0), false, world);
-	//Mesh mediumConeMesh(getConeVertices(1, 1), getConeIndices(), glm::vec4(0.5f, 0.5f, 1.0f, 1.0f));
-	//GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
+	PhysicsCone mediumCone(true, 1.0, 1.0, 1.0, glm::vec3(5, 7, 0.2), glm::vec3(180, 0, 0), world);
+	Mesh mediumConeMesh(getConeVertices(1, 1), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
+	
+	//PhysicsCylinder littleCylinder(true, 0.5, 0.5, 0.5, 0.5, glm::vec3(0, 5, 6), glm::vec3(60, 0, 0), world);
+	//Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	//GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
+	
+	//PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(0, 0, 0), world);
+	//Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
+	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
 
 	//==============//
 	//Light position//
@@ -278,8 +281,9 @@ int main()
 
 		if (ImGui::Button("Reset"))
 		{
-			littleCylinder.resetTransform();
+			//littleCylinder.resetTransform();
 			bigBox.resetTransform();
+			mediumCone.resetTransform();
 
 			//Brief update to move the objects even if simulation isn't running
 			world->stepWorld(1 / 1000);
@@ -335,8 +339,8 @@ int main()
 		//groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		//mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		//littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 
 		// ImGui functions end here
 		ImGui::Render();
