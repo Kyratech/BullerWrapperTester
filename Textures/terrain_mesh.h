@@ -1,24 +1,15 @@
 #ifndef TERRAIN_MESH_H
 #define TERRAIN_MESH_H
 
-//GL stuff
-#include <GL/glew.h>
-
-//GLM - Maths for openGL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-//Other
-#include <vector>
+#include "Tester.h"
 #include <iostream>
 
-static std::vector<GLfloat> getTerrainVertices(std::vector<float>* data, int dataDepth, int dataWidth, float worldDepth, float worldWidth)
+static std::vector<struct Vertex> getTerrainVertices(std::vector<float>* data, int dataDepth, int dataWidth, float worldDepth, float worldWidth)
 {
 	float depthSpacing = worldDepth / dataDepth;
 	float widthSpacing = worldWidth / dataWidth;
 
-	std::vector<GLfloat> vertices(data->size() * 6, 0);
+	std::vector<struct Vertex> vertices;
 
 	std::cout << "Gonna make some terrain verts." << std::endl;
 
@@ -28,6 +19,10 @@ static std::vector<GLfloat> getTerrainVertices(std::vector<float>* data, int dat
 		int z = i / dataWidth;
 		int x = i % dataWidth;
 
+		struct Vertex vert = {{x * depthSpacing - worldDepth / 2, (*data)[i], z * widthSpacing - worldWidth / 2}, { 0.0f, 1.0f, 0.0f}};
+		vertices.push_back(vert);
+
+		/*
 		//x
 		vertices[vertexStart] = x * depthSpacing - worldDepth / 2;
 		//y
@@ -39,9 +34,10 @@ static std::vector<GLfloat> getTerrainVertices(std::vector<float>* data, int dat
 		vertices[vertexStart + 3] = 0.0f;
 		vertices[vertexStart + 4] = 1.0f;
 		vertices[vertexStart + 5] = 0.0f;
+		*/
 	}
 
-	std::cout << "Made some terrain verts." << std::endl;
+	//std::cout << "Made some terrain verts." << std::endl;
 
 	return vertices;
 }

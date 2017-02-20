@@ -147,6 +147,8 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="TerrainUtilities.h" />
     <ClInclude Include="terrain_mesh.h" />
+    <ClInclude Include="Tester.h" />
+    <ClInclude Include="uv_sphere_mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="crash_crate.png" />

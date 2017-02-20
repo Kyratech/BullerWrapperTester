@@ -1,65 +1,55 @@
 #ifndef CYLINDER_MESH_H
 #define CYLINDER_MESH_H
 
-//GL stuff
-#include <GL/glew.h>
+#include "Tester.h"
 
-//GLM - Maths for openGL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-//Other
-#include <vector>
-#include <math.h>
-
-static std::vector<GLfloat> getCylinderVertices(float depth, float height, float width)
+static std::vector<struct Vertex> getCylinderVertices(float depth, float height, float width)
 {
 	float halfHeight = height / 2.0;
 	float halfDepth = depth / 2.0;
 	float halfWidth = width / 2.0;
 	float sin45 = sqrt(2) / 2.0;	//sin(45)
 
-	std::vector<GLfloat> cylinderVerts = {
+	std::vector<struct Vertex> cylinderVerts = {
 		//Top face
-		0.0,				halfHeight,	0.0,				0.0,	1.0,	0.0,	//Top centre		0
-		halfDepth,			halfHeight,	0.0,				0.0,	1.0,	0.0,	//Top 12.00 (front)	1
-		halfDepth * sin45,	halfHeight,	halfWidth * sin45,	0.0,	1.0,	0.0,	//Top 01:30			2
-		0,					halfHeight, halfWidth,			0.0,	1.0,	0.0,	//Top 03:00			3
-		-halfDepth * sin45,	halfHeight,	halfWidth * sin45,	0.0,	1.0,	0.0,	//Top 04:30			4
-		-halfDepth,			halfHeight,	0.0,				0.0,	1.0,	0.0,	//Top 06.00 (back)	5
-		-halfDepth * sin45,	halfHeight,	-halfWidth * sin45,	0.0,	1.0,	0.0,	//Top 07:30			6
-		0,					halfHeight, -halfWidth,			0.0,	1.0,	0.0,	//Top 09:00			7
-		halfDepth * sin45,	halfHeight,	-halfWidth * sin45,	0.0,	1.0,	0.0,	//Top 10:30			8
-		
+		{{0.0,					halfHeight,	0.0},					{0.0,	1.0,	0.0}},	//Top centre		0
+		{{halfDepth,			halfHeight,	0.0},					{0.0,	1.0,	0.0}},	//Top 12.00 (front)	1
+		{{halfDepth * sin45,	halfHeight,	halfWidth * sin45},		{0.0,	1.0,	0.0}},	//Top 01:30			2
+		{{0,					halfHeight, halfWidth},				{0.0,	1.0,	0.0}},	//Top 03:00			3
+		{{-halfDepth * sin45,	halfHeight,	halfWidth * sin45},		{0.0,	1.0,	0.0}},	//Top 04:30			4
+		{{-halfDepth,			halfHeight,	0.0},					{0.0,	1.0,	0.0}},	//Top 06.00 (back)	5
+		{{-halfDepth * sin45,	halfHeight,	-halfWidth * sin45},	{0.0,	1.0,	0.0}},	//Top 07:30			6
+		{{0,					halfHeight, -halfWidth},			{0.0,	1.0,	0.0}},	//Top 09:00			7
+		{{halfDepth * sin45,	halfHeight,	-halfWidth * sin45},	{0.0,	1.0,	0.0}},	//Top 10:30			8
+
 		//Curved surface
-		halfDepth,			halfHeight,		0.0,				1.0,	0.0,	0.0,	//Top 12.00		9
-		halfDepth,			-halfHeight,	0.0,				1.0,	0.0,	0.0,	//Bottom 12.00	10
-		halfDepth * sin45,	halfHeight,		halfWidth * sin45,	sin45,	0.0,	sin45,	//Top 01:30		11
-		halfDepth * sin45,	-halfHeight,	halfWidth * sin45,	sin45,	0.0,	sin45,	//Bottom 01:30	12
-		0,					halfHeight,		halfWidth,			0.0,	0.0,	1.0,	//Top 03:00		13
-		0,					-halfHeight,	halfWidth,			0.0,	0.0,	1.0,	//Bottom 03:00	14
-		-halfDepth * sin45,	halfHeight,		halfWidth * sin45,	-sin45,	0.0,	sin45,	//Top 04:30		15
-		-halfDepth * sin45,	-halfHeight,	halfWidth * sin45,	-sin45,	0.0,	sin45,	//Bottom 04:30	16
-		-halfDepth,			halfHeight,		0.0,				-1.0,	0.0,	0.0,	//Top 06.00		17
-		-halfDepth,			-halfHeight,	0.0,				-1.0,	0.0,	0.0,	//Bottom 06.00	18
-		-halfDepth * sin45,	halfHeight,		-halfWidth * sin45,	-sin45,	0.0,	-sin45,	//Top 07:30		19
-		-halfDepth * sin45,	-halfHeight,	-halfWidth * sin45,	-sin45,	0.0,	-sin45,	//Bottom 07:30	20
-		0,					halfHeight,		-halfWidth,			0.0,	0.0,	-1.0,	//Top 09:00		21
-		0,					-halfHeight,	-halfWidth,			0.0,	0.0,	-1.0,	//Bottom 09:00	22
-		halfDepth * sin45,	halfHeight,		-halfWidth * sin45,	sin45,	0.0,	-sin45,	//Top 10:30		23
-		halfDepth * sin45,	-halfHeight,	-halfWidth * sin45,	sin45,	0.0,	-sin45,	//Bottom 10:30	24
-																				
+		{{halfDepth,			halfHeight,		0.0},					{1.0,	0.0,	0.0}},	//Top 12.00		9
+		{{halfDepth,			-halfHeight,	0.0},					{1.0,	0.0,	0.0}},	//Bottom 12.00	10
+		{{halfDepth * sin45,	halfHeight,		halfWidth * sin45},		{sin45,	0.0,	sin45}},	//Top 01:30		11
+		{{halfDepth * sin45,	-halfHeight,	halfWidth * sin45},		{sin45,	0.0,	sin45}},	//Bottom 01:30	12
+		{{0,					halfHeight,		halfWidth},				{0.0,	0.0,	1.0}},	//Top 03:00		13
+		{{0,					-halfHeight,	halfWidth},				{0.0,	0.0,	1.0}},	//Bottom 03:00	14
+		{{-halfDepth * sin45,	halfHeight,		halfWidth * sin45},		{-sin45,	0.0,	sin45}},	//Top 04:30		15
+		{{-halfDepth * sin45,	-halfHeight,	halfWidth * sin45},		{-sin45,	0.0,	sin45}},	//Bottom 04:30	16
+		{{-halfDepth,			halfHeight,		0.0},					{-1.0,	0.0,	0.0}},	//Top 06.00		17
+		{{-halfDepth,			-halfHeight,	0.0},					{-1.0,	0.0,	0.0}},	//Bottom 06.00	18
+		{{-halfDepth * sin45,	halfHeight,		-halfWidth * sin45},	{-sin45,	0.0,	-sin45}},	//Top 07:30		19
+		{{-halfDepth * sin45,	-halfHeight,	-halfWidth * sin45},	{-sin45,	0.0,	-sin45}},	//Bottom 07:30	20
+		{{0,					halfHeight,		-halfWidth},			{0.0,	0.0,	-1.0}},	//Top 09:00		21
+		{{0,					-halfHeight,	-halfWidth},			{0.0,	0.0,	-1.0}},	//Bottom 09:00	22
+		{{halfDepth * sin45,	halfHeight,		-halfWidth * sin45},	{sin45,	0.0,	-sin45}},	//Top 10:30		23
+		{{halfDepth * sin45,	-halfHeight,	-halfWidth * sin45},	{sin45,	0.0,	-sin45}},	//Bottom 10:30	24
+
 		//Bottom face
-		0.0,				-halfHeight,	0.0,				0.0,	-1.0,	0.0,	//Bottom centre	25
-		halfDepth,			-halfHeight,	0.0,				0.0,	-1.0,	0.0,	//Bottom 12.00	26
-		halfDepth * sin45,	-halfHeight,	halfWidth * sin45,	0.0,	-1.0,	0.0,	//Bottom 01:30	27
-		0,					-halfHeight,	halfWidth,			0.0,	-1.0,	0.0,	//Bottom 03:00	28
-		-halfDepth * sin45,	-halfHeight,	halfWidth * sin45,	0.0,	-1.0,	0.0,	//Bottom 04:30	29
-		-halfDepth,			-halfHeight,	0.0,				0.0,	-1.0,	0.0,	//Bottom 06.00	30
-		-halfDepth * sin45,	-halfHeight,	-halfWidth * sin45,	0.0,	-1.0,	0.0,	//Bottom 07:30	31
-		0,					-halfHeight,	-halfWidth,			0.0,	-1.0,	0.0,	//Bottom 09:00	32
-		halfDepth * sin45,	-halfHeight,	-halfWidth * sin45,	0.0,	-1.0,	0.0,	//Bottom 10:30	33
+		{{0.0,					-halfHeight,	0.0},					{0.0,	-1.0,	0.0}},	//Bottom centre	25
+		{{halfDepth,			-halfHeight,	0.0},					{0.0,	-1.0,	0.0}},	//Bottom 12.00	26
+		{{halfDepth * sin45,	-halfHeight,	halfWidth * sin45},		{0.0,	-1.0,	0.0}},	//Bottom 01:30	27
+		{{0,					-halfHeight,	halfWidth},				{0.0,	-1.0,	0.0}},	//Bottom 03:00	28
+		{{-halfDepth * sin45,	-halfHeight,	halfWidth * sin45},		{0.0,	-1.0,	0.0}},	//Bottom 04:30	29
+		{{-halfDepth,			-halfHeight,	0.0},					{0.0,	-1.0,	0.0}},	//Bottom 06.00	30
+		{{-halfDepth * sin45,	-halfHeight,	-halfWidth * sin45},	{0.0,	-1.0,	0.0}},	//Bottom 07:30	31
+		{{0,					-halfHeight,	-halfWidth},			{0.0,	-1.0,	0.0}},	//Bottom 09:00	32
+		{{halfDepth * sin45,	-halfHeight,	-halfWidth * sin45},	{0.0,	-1.0,	0.0}},	//Bottom 10:30	33
 	};
 
 	return cylinderVerts;

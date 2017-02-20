@@ -33,6 +33,7 @@
 #include "cone_mesh.h"
 #include "cylinder_mesh.h"
 #include "terrain_mesh.h"
+#include "uv_sphere_mesh.h"
 
 #include <iostream>
 #include <vector>
@@ -43,6 +44,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void mouse_movement(GLFWwindow *window, double xPos, double yPos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xpos, double ypos);
+
+void callbackTest(int po1, int po2);
 
 const GLuint WIDTH = 1400;
 const GLuint HEIGHT = 800;
@@ -161,7 +164,8 @@ int main()
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 	*/
 
-	PhysicsWorld* world = new PhysicsWorld(glm::vec3(0, -10, 0), false);
+	PhysicsWorld* world = new PhysicsWorld(1, false);
+	world->setCollisionFunction(callbackTest);
 
 	//==================//
 	//Set up the objects//
@@ -191,7 +195,7 @@ int main()
 	GameObject bigcubeObject(&bigcubeMesh, glm::vec3(0.0f, 0.0f, 0.0f), groundRigidBody, dynamicsWorld);
 
 	//Box
-	float boxDimension = 0.5f;
+	float boxDimension = 1f;
 	btCollisionShape* fallShape = new btBoxShape(btVector3(boxDimension / 2.0, boxDimension / 2.0, boxDimension / 2.0));
 	btDefaultMotionState* fallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0.5, 0.5, 0, 4), btVector3(0, 5, 0)));
 	btScalar mass = 1;
@@ -217,30 +221,38 @@ int main()
 	GameObject cubeObject2(&cubeMesh2, glm::vec3(0.0f, 0.0f, 0.0f), fallRigidBody2, dynamicsWorld);
 	*/
 
+	/*
 	float maxHeight = 7.0f;
 	PhysicsHeightmap heightmap("pyramid.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
 	
 	HeightfieldData heightData = heightmap.getHeightMapData();
-	std::vector<GLfloat> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getWidth(), heightData.getDepth(), 15.0, 15.0);
+	std::vector<struct Vertex> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getWidth(), heightData.getDepth(), 15.0, 15.0);
 	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getWidth(), heightData.getDepth());
 	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
 	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, -maxHeight / 2, 0.0f), &heightmap);
+	*/
 
-	PhysicsBox bigBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(45, 0, 0), world);
+	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(0, 0, 0), world);
+	bigBox.setCollisionID(1);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
 
-	PhysicsCone mediumCone(true, 1.0, 1.0, 1.0, glm::vec3(5, 7, 0.2), glm::vec3(180, 0, 0), world);
-	Mesh mediumConeMesh(getConeVertices(1, 1), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	PhysicsCone mediumCone(glm::vec3(5, 7, 0.2), glm::vec3(180, 0, 0), world);
+	mediumCone.setCollisionID(2);
+	Mesh mediumConeMesh(getConeVertices(1, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
 	
+	PhysicsBall mediumBall(glm::vec3(-5, 10, -5), world);
+	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
+	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
+
 	//PhysicsCylinder littleCylinder(true, 0.5, 0.5, 0.5, 0.5, glm::vec3(0, 5, 6), glm::vec3(60, 0, 0), world);
 	//Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	//GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
 	
-	//PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(0, 0, 0), world);
-	//Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
-	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+	PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(2, 0, 0), world);
+	Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
+	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
 
 	//==============//
 	//Light position//
@@ -284,6 +296,7 @@ int main()
 			//littleCylinder.resetTransform();
 			bigBox.resetTransform();
 			mediumCone.resetTransform();
+			mediumBall.resetTransform();
 
 			//Brief update to move the objects even if simulation isn't running
 			world->stepWorld(1 / 1000);
@@ -291,6 +304,8 @@ int main()
 		
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
+
+		//std::cout << "Response time: " << deltaTime << "ms" << std::endl;
 
 		//RENDERING COMMANDS HERE
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -336,11 +351,12 @@ int main()
 		// Draw objects //
 		//==============//
 
-		//groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		//terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		//littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		mediumBallObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 
 		// ImGui functions end here
 		ImGui::Render();
@@ -441,4 +457,9 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		middleMouse = true;
 	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
 		middleMouse = false;
+}
+
+void callbackTest(int po1, int po2)
+{
+	std::cout << "Collision between: " << po1 << " and " << po2 << std::endl;
 }

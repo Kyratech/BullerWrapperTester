@@ -1,16 +1,7 @@
 #ifndef CUBE_MESH_H
 #define CUBE_MESH_H
 
-//GL stuff
-#include <GL/glew.h>
-
-//GLM - Maths for openGL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-//Other
-#include <vector>
+#include "Tester.h"
 
 /*
 * Produces a vector of vertex locations for constructing a cube
@@ -27,47 +18,47 @@
 	|/__________|/
 		
 */
-static std::vector<GLfloat> getCubeVertices(float sideLength)
+static std::vector<struct Vertex> getCubeVertices(float sideLength)
 {
 	//Centred around local (0,0), the vertices have xyz locations at +/- half the side length
 	float halfSide = sideLength / 2.0;
 
-	std::vector<GLfloat> cubeVerts = {
+	std::vector<struct Vertex> cubeVerts = {
 		//Front
-		-halfSide,	-halfSide,	-halfSide,	0.0f, 0.0f, -1.0f,	//Front bottom left
-		halfSide,	-halfSide,	-halfSide,	0.0f, 0.0f, -1.0f,	//Front bottom right
-		halfSide,	halfSide,	-halfSide,	0.0f, 0.0f, -1.0f,	//Front top right
-		-halfSide,	halfSide,	-halfSide,	0.0f, 0.0f, -1.0f,	//Front top left
+		{{-halfSide,	-halfSide,	-halfSide},	{0.0f, 0.0f, -1.0f}},	//Front bottom left
+		{{halfSide,		-halfSide,	-halfSide},	{0.0f, 0.0f, -1.0f}},	//Front bottom right
+		{{halfSide,		halfSide,	-halfSide},	{0.0f, 0.0f, -1.0f}},	//Front top right
+		{{-halfSide,	halfSide,	-halfSide},	{0.0f, 0.0f, -1.0f}},	//Front top left
 
 		//Right
-		halfSide,	-halfSide,	-halfSide,	1.0f, 0.0f, 0.0f,	//Front bottom right
-		halfSide,	halfSide,	-halfSide,	1.0f, 0.0f, 0.0f,	//Front top right
-		halfSide,	halfSide,	halfSide,	1.0f, 0.0f, 0.0f,	//Back top right
-		halfSide,	-halfSide,	halfSide,	1.0f, 0.0f, 0.0f,	//Back bottom right
+		{{halfSide,	-halfSide,	-halfSide},	{1.0f, 0.0f, 0.0f}},	//Front bottom right
+		{{halfSide,	halfSide,	-halfSide},	{1.0f, 0.0f, 0.0f}},	//Front top right
+		{{halfSide,	halfSide,	halfSide},	{1.0f, 0.0f, 0.0f}},	//Back top right
+		{{halfSide,	-halfSide,	halfSide},	{1.0f, 0.0f, 0.0f}},	//Back bottom right
 
 		//Back
-		-halfSide,	-halfSide,	halfSide,	0.0f, 0.0f, 1.0f,	//Back bottom left
-		halfSide,	-halfSide,	halfSide,	0.0f, 0.0f, 1.0f,	//Back bottom right
-		halfSide,	halfSide,	halfSide,	0.0f, 0.0f, 1.0f,	//Back top right
-		-halfSide,	halfSide,	halfSide,	0.0f, 0.0f, 1.0f,	//Back top left
+		{{-halfSide,	-halfSide,	halfSide},	{0.0f, 0.0f, 1.0f}},	//Back bottom left
+		{{halfSide,		-halfSide,	halfSide},	{0.0f, 0.0f, 1.0f}},	//Back bottom right
+		{{halfSide,		halfSide,	halfSide},	{0.0f, 0.0f, 1.0f} },	//Back top right
+		{{-halfSide,	halfSide,	halfSide},	{0.0f, 0.0f, 1.0f}},	//Back top left
 
 		//Left
-		-halfSide,	-halfSide,	-halfSide,	-1.0f, 0.0f, 0.0f,	//Front bottom left
-		-halfSide,	-halfSide,	halfSide,	-1.0f, 0.0f, 0.0f,	//Back bottom left
-		-halfSide,	halfSide,	-halfSide,	-1.0f, 0.0f, 0.0f,	//Front top left
-		-halfSide,	halfSide,	halfSide,	-1.0f, 0.0f, 0.0f,	//Back top left
+		{{-halfSide,	-halfSide,	-halfSide},	{-1.0f, 0.0f, 0.0f}},	//Front bottom left
+		{{-halfSide,	-halfSide,	halfSide},	{-1.0f, 0.0f, 0.0f}},	//Back bottom left
+		{{-halfSide,	halfSide,	-halfSide},	{-1.0f, 0.0f, 0.0f}},	//Front top left
+		{{-halfSide,	halfSide,	halfSide},	{-1.0f, 0.0f, 0.0f}},	//Back top left
 		
 		//Bottom
-		-halfSide,	-halfSide,	-halfSide,	0.0f, -1.0f, 0.0f,	//Front bottom left
-		halfSide,	-halfSide,	-halfSide,	0.0f, -1.0f, 0.0f,	//Front bottom right
-		-halfSide,	-halfSide,	halfSide,	0.0f, -1.0f, 0.0f,	//Back bottom left
-		halfSide,	-halfSide,	halfSide,	0.0f, -1.0f, 0.0f,	//Back bottom right
+		{{-halfSide,	-halfSide,	-halfSide},	{0.0f, -1.0f, 0.0f}},	//Front bottom left
+		{{halfSide,		-halfSide,	-halfSide},	{0.0f, -1.0f, 0.0f}},	//Front bottom right
+		{{-halfSide,	-halfSide,	halfSide},	{0.0f, -1.0f, 0.0f}},	//Back bottom left
+		{{halfSide,		-halfSide,	halfSide},	{0.0f, -1.0f, 0.0f}},	//Back bottom right
 		
 		//Top
-		halfSide,	halfSide,	-halfSide,	0.0f, 1.0f, 0.0f,	//Front top right
-		-halfSide,	halfSide,	-halfSide,	0.0f, 1.0f, 0.0f,	//Front top left	
-		halfSide,	halfSide,	halfSide,	0.0f, 1.0f, 0.0f,	//Back top right
-		-halfSide,	halfSide,	halfSide,	0.0f, 1.0f, 0.0f	//Back top left
+		{{halfSide,		halfSide,	-halfSide},	{0.0f, 1.0f, 0.0f}},	//Front top right
+		{{-halfSide,	halfSide,	-halfSide},	{0.0f, 1.0f, 0.0f}},	//Front top left	
+		{{halfSide,		halfSide,	halfSide},	{0.0f, 1.0f, 0.0f}},	//Back top right
+		{{-halfSide,	halfSide,	halfSide},	{0.0f, 1.0f, 0.0f}}	//Back top left
 	};
 
 	return cubeVerts;
