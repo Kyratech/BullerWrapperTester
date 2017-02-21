@@ -18,6 +18,7 @@
 #include "SimpleBulletWrapper\PhysicsObjectTypes.h"
 #include "SimpleBulletWrapper\PhysicsWorld.h"
 #include "SimpleBulletWrapper\HeightfieldData.h"
+#include "SimpleBulletWrapper\GravityObject.h"
 
 //GUI
 #include "ImGUI/imgui.h"
@@ -164,7 +165,7 @@ int main()
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 	*/
 
-	PhysicsWorld* world = new PhysicsWorld(1, false);
+	PhysicsWorld* world = new PhysicsWorld(0, false);
 	world->setCollisionFunction(callbackTest);
 
 	//==================//
@@ -243,16 +244,22 @@ int main()
 	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
 	
 	PhysicsBall mediumBall(glm::vec3(-5, 10, -5), world);
+	mediumBall.setCollisionID(3);
 	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
 	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
+
+	GravitySphere planetoid(2.5f, 3.0f, glm::vec3(0, 0, 0), world);
+	planetoid.setCollisionID(4);
+	Mesh planetoidMesh(GetSphereVertices(30, 30, 2.5f), GetSphereIndices(30, 30), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	GameObject planetoidObject(&planetoidMesh, glm::vec3(0.0, 0.0, 0.0), &planetoid);
 
 	//PhysicsCylinder littleCylinder(true, 0.5, 0.5, 0.5, 0.5, glm::vec3(0, 5, 6), glm::vec3(60, 0, 0), world);
 	//Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	//GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
 	
-	PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(2, 0, 0), world);
-	Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
-	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+	//PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(2, 0, 0), world);
+	//Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
+	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
 
 	//==============//
 	//Light position//
@@ -351,12 +358,13 @@ int main()
 		// Draw objects //
 		//==============//
 
-		groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		//groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		//terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		//littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		mediumBallObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		planetoidObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 
 		// ImGui functions end here
 		ImGui::Render();
