@@ -78,6 +78,10 @@ GLfloat lastFrame = 0.0f;
 
 bool simulationRunning = false;
 
+bool cubeTouching = false;
+bool sphereTouching = false;
+bool coneTouching = false;
+
 int main()
 {
 	//========================//
@@ -310,6 +314,11 @@ int main()
 		}
 		
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+		ImGui::Text("Cube touching sphere: %x", cubeTouching);
+		ImGui::Text("Cone touching sphere: %x", coneTouching);
+		ImGui::Text("Ball touching sphere: %x", sphereTouching);
+
 		ImGui::End();
 
 		//std::cout << "Response time: " << deltaTime << "ms" << std::endl;
@@ -346,6 +355,9 @@ int main()
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	
+		cubeTouching = false;
+		coneTouching = false;
+		sphereTouching = false;
 		
 		//================//
 		// Run simulation //
@@ -469,5 +481,20 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void callbackTest(int po1, int po2)
 {
-	std::cout << "Collision between: " << po1 << " and " << po2 << std::endl;
+	if (po2 == 4)
+	{
+		if (po1 == 1)
+		{
+			cubeTouching = true;
+		}
+		else if (po1 == 2)
+		{
+			coneTouching = true;
+		}
+		else if (po1 == 3)
+		{
+			sphereTouching = true;
+		}
+	}
+	//std::cout << "Collision between: " << po1 << " and " << po2 << std::endl;
 }
