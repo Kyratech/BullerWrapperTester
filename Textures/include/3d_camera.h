@@ -2,8 +2,9 @@
 #define CAMERA3D_H
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+
+#include "SimpleBulletWrapper/include/glm/glm.hpp"
+#include "SimpleBulletWrapper/include/glm/gtc/matrix_transform.hpp"
 
 enum Camera_Directions
 {

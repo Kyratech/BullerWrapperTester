@@ -5,14 +5,14 @@
 #include <GL/glew.h>
 
 //GLM - Maths for openGL
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "SimpleBulletWrapper/include/glm/glm.hpp"
+#include "SimpleBulletWrapper/include/glm/gtx/quaternion.hpp"
+#include "SimpleBulletWrapper/include/glm/gtc/matrix_transform.hpp"
+#include "SimpleBulletWrapper/include/glm/gtc/type_ptr.hpp"
 
 //Physics
 #include "btBulletDynamicsCommon.h"
-#include "SimpleBulletWrapper\PhysicsObject.h"
+#include "SimpleBulletWrapper/include/PhysicsObject.h"
 
 //Other
 #include "mesh.h"

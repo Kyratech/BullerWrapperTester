@@ -82,6 +82,8 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,41 +120,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ImGUI\imgui.cpp" />
-    <ClCompile Include="ImGUI\imgui_demo.cpp" />
-    <ClCompile Include="ImGUI\imgui_draw.cpp" />
-    <ClCompile Include="ImGUI\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="include\ImGUI\imgui.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_impl_glfw_gl3.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fragment_shader.txt" />
-    <Text Include="vertex_shader.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="3d_camera.h" />
-    <ClInclude Include="cone_mesh.h" />
-    <ClInclude Include="cube_mesh.h" />
-    <ClInclude Include="cylinder_mesh.h" />
-    <ClInclude Include="fps_camera.h" />
-    <ClInclude Include="ImGUI\imconfig.h" />
-    <ClInclude Include="ImGUI\imgui.h" />
-    <ClInclude Include="ImGUI\imgui_impl_glfw_gl3.h" />
-    <ClInclude Include="ImGUI\imgui_internal.h" />
-    <ClInclude Include="ImGUI\stb_rect_pack.h" />
-    <ClInclude Include="ImGUI\stb_textedit.h" />
-    <ClInclude Include="ImGUI\stb_truetype.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="game_object.h" />
-    <ClInclude Include="plane_mesh.h" />
-    <ClInclude Include="shader.h" />
-    <ClInclude Include="TerrainUtilities.h" />
-    <ClInclude Include="terrain_mesh.h" />
-    <ClInclude Include="Tester.h" />
-    <ClInclude Include="uv_sphere_mesh.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="crash_crate.png" />
-    <Image Include="crash_question.png" />
+    <ClInclude Include="include\3d_camera.h" />
+    <ClInclude Include="include\cone_mesh.h" />
+    <ClInclude Include="include\cube_mesh.h" />
+    <ClInclude Include="include\cylinder_mesh.h" />
+    <ClInclude Include="include\fps_camera.h" />
+    <ClInclude Include="include\game_object.h" />
+    <ClInclude Include="include\ImGUI\imconfig.h" />
+    <ClInclude Include="include\ImGUI\imgui.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="include\ImGUI\imgui_internal.h" />
+    <ClInclude Include="include\ImGUI\stb_rect_pack.h" />
+    <ClInclude Include="include\ImGUI\stb_textedit.h" />
+    <ClInclude Include="include\ImGUI\stb_truetype.h" />
+    <ClInclude Include="include\mesh.h" />
+    <ClInclude Include="include\plane_mesh.h" />
+    <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\TerrainUtilities.h" />
+    <ClInclude Include="include\terrain_mesh.h" />
+    <ClInclude Include="include\Tester.h" />
+    <ClInclude Include="include\uv_sphere_mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Programming\CM Bullet Physics\build\src\BulletCollision\BulletCollision.vcxproj">
@@ -169,9 +163,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ImGUI\imgui.ini" />
-    <None Include="ImGUI\LICENSE" />
-    <None Include="ImGUI\README.md" />
+    <None Include="include\ImGUI\imgui.ini" />
+    <None Include="include\ImGUI\LICENSE" />
+    <None Include="include\ImGUI\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\channel.bmp" />
+    <Image Include="image\crash_crate.png" />
+    <Image Include="image\crash_question.png" />
+    <Image Include="image\craters.bmp" />
+    <Image Include="image\pit.bmp" />
+    <Image Include="image\pyramid.bmp" />
+    <Image Include="image\ramp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shader\fragment_shader.txt" />
+    <Text Include="shader\vertex_shader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

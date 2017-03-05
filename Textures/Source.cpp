@@ -9,32 +9,37 @@
 #include <SOIL/soil.h>
 
 //GLM - Maths for openGL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+//#include "glm/glm.hpp"
+//#include "glm/gtc/matrix_transform.hpp"
+//#include "glm/gtc/type_ptr.hpp"
 
 //Physics
-#include "btBulletDynamicsCommon.h"
-#include "SimpleBulletWrapper\PhysicsObjectTypes.h"
-#include "SimpleBulletWrapper\PhysicsWorld.h"
-#include "SimpleBulletWrapper\HeightfieldData.h"
-#include "SimpleBulletWrapper\GravityObject.h"
+//#include <btBulletDynamicsCommon.h>
+#include <SimpleBulletWrapper/include/PhysicsObjectTypes.h>
+#include <SimpleBulletWrapper/include/PhysicsWorld.h>
+#include <SimpleBulletWrapper/include/HeightfieldData.h>
+#include <SimpleBulletWrapper/include/GravityObject.h>
+#include <SimpleBulletWrapper/include/glm/glm.hpp>
+#include <SimpleBulletWrapper/include/glm/gtc/matrix_transform.hpp>
+#include <SimpleBulletWrapper/include/glm/gtc/type_ptr.hpp>
+
+
 
 //GUI
-#include "ImGUI/imgui.h"
-#include "ImGUI/imgui_impl_glfw_gl3.h"
+#include "include/ImGUI/imgui.h"
+#include "include/ImGUI/imgui_impl_glfw_gl3.h"
 
 //Other
-#include "shader.h"
-#include "3d_camera.h"
-#include "mesh.h"
-#include "game_object.h"
-#include "cube_mesh.h"
-#include "plane_mesh.h"
-#include "cone_mesh.h"
-#include "cylinder_mesh.h"
-#include "terrain_mesh.h"
-#include "uv_sphere_mesh.h"
+#include "include/shader.h"
+#include "include/3d_camera.h"
+#include "include/mesh.h"
+#include "include/game_object.h"
+#include "include/cube_mesh.h"
+#include "include/plane_mesh.h"
+#include "include/cone_mesh.h"
+#include "include/cylinder_mesh.h"
+#include "include/terrain_mesh.h"
+#include "include/uv_sphere_mesh.h"
 
 #include <iostream>
 #include <vector>
@@ -143,7 +148,7 @@ int main()
 	//glEnable(GL_PRIMITIVE_RESTART);
 
 	//Shader load
-	Shader ourShader("./vertex_shader.txt", "./fragment_shader.txt");
+	Shader ourShader("./shader/vertex_shader.txt", "./shader/fragment_shader.txt");
 
 	//============//
 	//Set up ImGUI//
@@ -251,6 +256,11 @@ int main()
 	mediumBall.setCollisionID(3);
 	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
 	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
+
+	//PhysicsConvexMesh testMesh(true, "fakelol.obj", 1.0, glm::vec3(0, 0, 8), glm::vec3(0, 0, 0), world);
+	//testMesh.setCollisionID(4);
+	//Mesh fakeBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+	//GameObject meshObject(&fakeBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &testMesh);
 
 	GravitySphere planetoid(2.5f, 3.0f, glm::vec3(0, 0, 0), world);
 	planetoid.setCollisionID(4);
