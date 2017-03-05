@@ -40,6 +40,7 @@
 #include "include/cylinder_mesh.h"
 #include "include/terrain_mesh.h"
 #include "include/uv_sphere_mesh.h"
+#include "include/triangle_mesh.h"
 
 #include <iostream>
 #include <vector>
@@ -86,6 +87,7 @@ bool simulationRunning = false;
 bool cubeTouching = false;
 bool sphereTouching = false;
 bool coneTouching = false;
+bool meshTouching = false;
 
 int main()
 {
@@ -174,7 +176,7 @@ int main()
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 	*/
 
-	PhysicsWorld* world = new PhysicsWorld(0, false);
+	PhysicsWorld* world = new PhysicsWorld(1.0f, false);
 	world->setCollisionFunction(callbackTest);
 
 	//==================//
@@ -231,16 +233,15 @@ int main()
 	GameObject cubeObject2(&cubeMesh2, glm::vec3(0.0f, 0.0f, 0.0f), fallRigidBody2, dynamicsWorld);
 	*/
 
-	/*
 	float maxHeight = 7.0f;
-	PhysicsHeightmap heightmap("pyramid.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
+	PhysicsHeightmap heightmap("image/pyramid.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
 	
 	HeightfieldData heightData = heightmap.getHeightMapData();
 	std::vector<struct Vertex> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getWidth(), heightData.getDepth(), 15.0, 15.0);
 	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getWidth(), heightData.getDepth());
 	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
 	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, -maxHeight / 2, 0.0f), &heightmap);
-	*/
+	heightmap.setCollisionID(5);
 
 	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(0, 0, 0), world);
 	bigBox.setCollisionID(1);
@@ -257,15 +258,15 @@ int main()
 	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
 	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
 
-	//PhysicsConvexMesh testMesh(true, "fakelol.obj", 1.0, glm::vec3(0, 0, 8), glm::vec3(0, 0, 0), world);
-	//testMesh.setCollisionID(4);
-	//Mesh fakeBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
-	//GameObject meshObject(&fakeBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &testMesh);
+	PhysicsConvexMesh testMesh(true, "model/square_frustum.obj", 1.0, glm::vec3(-3, 10, -3), glm::vec3(135, 0, 0), world);
+	testMesh.setCollisionID(4);
+	Mesh frustumMesh(GetMeshVertices("model/square_frustum.obj"), GetMeshIndices("model/square_frustum.obj"), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+	GameObject meshObject(&frustumMesh, glm::vec3(0.0f, 0.0f, 0.0f), &testMesh);
 
-	GravitySphere planetoid(2.5f, 3.0f, glm::vec3(0, 0, 0), world);
-	planetoid.setCollisionID(4);
-	Mesh planetoidMesh(GetSphereVertices(30, 30, 2.5f), GetSphereIndices(30, 30), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
-	GameObject planetoidObject(&planetoidMesh, glm::vec3(0.0, 0.0, 0.0), &planetoid);
+	//GravitySphere planetoid(2.5f, 3.0f, glm::vec3(0, 0, 0), world);
+	//planetoid.setCollisionID(5);
+	//Mesh planetoidMesh(GetSphereVertices(30, 30, 2.5f), GetSphereIndices(30, 30), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	//GameObject planetoidObject(&planetoidMesh, glm::vec3(0.0, 0.0, 0.0), &planetoid);
 
 	//PhysicsCylinder littleCylinder(true, 0.5, 0.5, 0.5, 0.5, glm::vec3(0, 5, 6), glm::vec3(60, 0, 0), world);
 	//Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
@@ -318,6 +319,7 @@ int main()
 			bigBox.resetTransform();
 			mediumCone.resetTransform();
 			mediumBall.resetTransform();
+			testMesh.resetTransform();
 
 			//Brief update to move the objects even if simulation isn't running
 			world->stepWorld(1 / 1000);
@@ -328,6 +330,7 @@ int main()
 		ImGui::Text("Cube touching sphere: %x", cubeTouching);
 		ImGui::Text("Cone touching sphere: %x", coneTouching);
 		ImGui::Text("Ball touching sphere: %x", sphereTouching);
+		ImGui::Text("Mesh touching sphere: %x", meshTouching);
 
 		ImGui::End();
 
@@ -381,12 +384,13 @@ int main()
 		//==============//
 
 		//groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		//terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		//littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		meshObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 		mediumBallObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		planetoidObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		//planetoidObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 
 		// ImGui functions end here
 		ImGui::Render();
@@ -491,7 +495,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void callbackTest(int po1, int po2)
 {
-	if (po2 == 4)
+	if (po2 == 5)
 	{
 		if (po1 == 1)
 		{
@@ -504,6 +508,10 @@ void callbackTest(int po1, int po2)
 		else if (po1 == 3)
 		{
 			sphereTouching = true;
+		}
+		else if (po1 == 4)
+		{
+			meshTouching = true;
 		}
 	}
 	//std::cout << "Collision between: " << po1 << " and " << po2 << std::endl;

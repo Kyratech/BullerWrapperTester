@@ -146,6 +146,7 @@
     <ClInclude Include="include\TerrainUtilities.h" />
     <ClInclude Include="include\terrain_mesh.h" />
     <ClInclude Include="include\Tester.h" />
+    <ClInclude Include="include\triangle_mesh.h" />
     <ClInclude Include="include\uv_sphere_mesh.h" />
   </ItemGroup>
   <ItemGroup>
