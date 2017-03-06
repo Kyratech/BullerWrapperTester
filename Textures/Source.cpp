@@ -52,7 +52,7 @@ void mouse_movement(GLFWwindow *window, double xPos, double yPos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xpos, double ypos);
 
-void callbackTest(int po1, int po2);
+void callbackTest(PhysicsCollision collision);
 
 const GLuint WIDTH = 1400;
 const GLuint HEIGHT = 800;
@@ -495,23 +495,23 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		middleMouse = false;
 }
 
-void callbackTest(int po1, int po2)
+void callbackTest(PhysicsCollision collision)
 {
-	if (po2 == 5)
+	if (collision.contains(5))
 	{
-		if (po1 == 1)
+		if (collision.contains(1))
 		{
 			cubeTouching = true;
 		}
-		else if (po1 == 2)
+		else if (collision.contains(2))
 		{
 			coneTouching = true;
 		}
-		else if (po1 == 3)
+		else if (collision.contains(3))
 		{
 			sphereTouching = true;
 		}
-		else if (po1 == 4)
+		else if (collision.contains(4))
 		{
 			meshTouching = true;
 		}
