@@ -185,8 +185,6 @@ int main()
 
 	//Physics bits
 
-	std::vector<GameObject> dynamicObjects;
-
 	//Ground
 	/*
 	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
@@ -233,35 +231,43 @@ int main()
 	GameObject cubeObject2(&cubeMesh2, glm::vec3(0.0f, 0.0f, 0.0f), fallRigidBody2, dynamicsWorld);
 	*/
 
+	std::vector<GameObject> dynamicObjects;
+
 	float maxHeight = 7.0f;
 	PhysicsHeightmap heightmap("image/pyramid.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
 	
 	HeightfieldData heightData = heightmap.getHeightMapData();
 	std::vector<struct Vertex> terrainVerts = getTerrainVertices(heightData.getData(), heightData.getWidth(), heightData.getDepth(), 15.0, 15.0);
 	std::vector<GLuint> terrainInds = getTerrainIndices(heightData.getWidth(), heightData.getDepth());
+	
 	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
 	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, -maxHeight / 2, 0.0f), &heightmap);
 	heightmap.setCollisionID(5);
+	dynamicObjects.push_back(terrainObject);
 
 	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(0, 0, 0), world);
 	bigBox.setCollisionID(1);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
+	dynamicObjects.push_back(bigBoxObject);
 
 	PhysicsCone mediumCone(glm::vec3(5, 7, 0.2), glm::vec3(180, 0, 0), world);
 	mediumCone.setCollisionID(2);
 	Mesh mediumConeMesh(getConeVertices(1, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
+	dynamicObjects.push_back(mediumConeObject);
 	
 	PhysicsBall mediumBall(glm::vec3(-5, 10, -5), world);
 	mediumBall.setCollisionID(3);
 	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
 	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
+	dynamicObjects.push_back(mediumBallObject);
 
 	PhysicsConvexMesh testMesh(true, "model/square_frustum.obj", 1.0, glm::vec3(-3, 10, -3), glm::vec3(135, 0, 0), world);
 	testMesh.setCollisionID(4);
 	Mesh frustumMesh(GetMeshVertices("model/square_frustum.obj"), GetMeshIndices("model/square_frustum.obj"), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject meshObject(&frustumMesh, glm::vec3(0.0f, 0.0f, 0.0f), &testMesh);
+	dynamicObjects.push_back(meshObject);
 
 	//GravitySphere planetoid(2.5f, 3.0f, glm::vec3(0, 0, 0), world);
 	//planetoid.setCollisionID(5);
@@ -315,11 +321,10 @@ int main()
 
 		if (ImGui::Button("Reset"))
 		{
-			//littleCylinder.resetTransform();
-			bigBox.resetTransform();
-			mediumCone.resetTransform();
-			mediumBall.resetTransform();
-			testMesh.resetTransform();
+			for each (GameObject obj in dynamicObjects)
+			{
+				obj.ResetObject();
+			}
 
 			//Brief update to move the objects even if simulation isn't running
 			world->stepWorld(1 / 1000);
@@ -383,13 +388,10 @@ int main()
 		// Draw objects //
 		//==============//
 
-		//groundObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		terrainObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		bigBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		//littleBoxObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		meshObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		mediumConeObject.DrawObject(modelLoc, ourShader, globalLightPosition);
-		mediumBallObject.DrawObject(modelLoc, ourShader, globalLightPosition);
+		for each (GameObject obj in dynamicObjects)
+		{
+			obj.DrawObject(modelLoc, ourShader, globalLightPosition);
+		}
 		//planetoidObject.DrawObject(modelLoc, ourShader, globalLightPosition);
 
 		// ImGui functions end here

@@ -64,6 +64,11 @@ class GameObject
 			//Draw the mesh
 			mesh->Draw(shader, lightPos);
 		}
+
+		void ResetObject()
+		{
+			physicsObject->resetTransform();
+		}
 };
 
 #endif
