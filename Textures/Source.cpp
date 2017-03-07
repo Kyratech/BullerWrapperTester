@@ -53,6 +53,8 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void scroll_callback(GLFWwindow* window, double xpos, double ypos);
 
 void callbackTest(PhysicsCollision collision);
+void callbackStartTest(PhysicsCollision collision);
+void callbackEndTest(PhysicsCollision collision);
 
 const GLuint WIDTH = 1400;
 const GLuint HEIGHT = 800;
@@ -84,10 +86,9 @@ GLfloat lastFrame = 0.0f;
 
 bool simulationRunning = false;
 
-bool cubeTouching = false;
-bool sphereTouching = false;
-bool coneTouching = false;
-bool meshTouching = false;
+bool cubeSphereTouching = false;
+bool cubeStartTouching = false;
+bool cubeEndTouching = false;
 
 int main()
 {
@@ -177,7 +178,10 @@ int main()
 	*/
 
 	PhysicsWorld* world = new PhysicsWorld(1.0f, false);
+	
 	world->setCollisionFunction(callbackTest);
+	world->setCollisionStartFunction(callbackStartTest);
+	world->setCollisionEndFunction(callbackEndTest);
 
 	//==================//
 	//Set up the objects//
@@ -233,6 +237,7 @@ int main()
 
 	std::vector<GameObject> dynamicObjects;
 
+	/*
 	float maxHeight = 7.0f;
 	PhysicsHeightmap heightmap("image/pyramid.bmp", 15, 15, maxHeight, glm::vec3(0, 0, 0), world);
 	
@@ -242,32 +247,38 @@ int main()
 	
 	Mesh terrainMesh(terrainVerts, terrainInds, glm::vec4(0.5, 0.5, 0.5, 1.0f));
 	GameObject terrainObject(&terrainMesh, glm::vec3(0.0f, -maxHeight / 2, 0.0f), &heightmap);
-	heightmap.setCollisionID(5);
 	dynamicObjects.push_back(terrainObject);
+	*/
 
-	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 1.0, glm::vec3(0, 10, 6), glm::vec3(0, 0, 0), world);
+	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 5.0, glm::vec3(0, 10, 6), glm::vec3(0, 0, 0), world);
 	bigBox.setCollisionID(1);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
 	dynamicObjects.push_back(bigBoxObject);
 
+	/*
 	PhysicsCone mediumCone(glm::vec3(5, 7, 0.2), glm::vec3(180, 0, 0), world);
 	mediumCone.setCollisionID(2);
 	Mesh mediumConeMesh(getConeVertices(1, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	GameObject mediumConeObject(&mediumConeMesh, glm::vec3(0.0, 0.0, 0.0), &mediumCone);
 	dynamicObjects.push_back(mediumConeObject);
-	
+	*/
+
+	/*
 	PhysicsBall mediumBall(glm::vec3(-5, 10, -5), world);
 	mediumBall.setCollisionID(3);
 	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
 	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
 	dynamicObjects.push_back(mediumBallObject);
+	*/
 
+	/*
 	PhysicsConvexMesh testMesh(true, "model/square_frustum.obj", 1.0, glm::vec3(-3, 10, -3), glm::vec3(135, 0, 0), world);
 	testMesh.setCollisionID(4);
 	Mesh frustumMesh(GetMeshVertices("model/square_frustum.obj"), GetMeshIndices("model/square_frustum.obj"), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject meshObject(&frustumMesh, glm::vec3(0.0f, 0.0f, 0.0f), &testMesh);
 	dynamicObjects.push_back(meshObject);
+	*/
 
 	//GravitySphere planetoid(2.5f, 3.0f, glm::vec3(0, 0, 0), world);
 	//planetoid.setCollisionID(5);
@@ -278,9 +289,11 @@ int main()
 	//Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	//GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
 	
-	//PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(2, 0, 0), world);
-	//Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
-	//GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+	PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(2, 0, 0), world);
+	groundBox.setCollisionID(3);
+	Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
+	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
+	dynamicObjects.push_back(groundObject);
 
 	//==============//
 	//Light position//
@@ -332,10 +345,9 @@ int main()
 		
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-		ImGui::Text("Cube touching sphere: %x", cubeTouching);
-		ImGui::Text("Cone touching sphere: %x", coneTouching);
-		ImGui::Text("Ball touching sphere: %x", sphereTouching);
-		ImGui::Text("Mesh touching sphere: %x", meshTouching);
+		ImGui::Text("Cube touching ground: %x", cubeSphereTouching);
+		ImGui::Text("Cube has started colliding: %x", cubeStartTouching);
+		ImGui::Text("Cube has ended colliding: %x", cubeEndTouching);
 
 		ImGui::End();
 
@@ -373,9 +385,9 @@ int main()
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	
-		cubeTouching = false;
-		coneTouching = false;
-		sphereTouching = false;
+		cubeSphereTouching = false;
+		cubeStartTouching = false;
+		cubeEndTouching = false;
 		
 		//================//
 		// Run simulation //
@@ -497,24 +509,28 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void callbackTest(PhysicsCollision collision)
 {
-	if (collision.contains(5))
+	//Collision between box and ground
+	if (collision.contains(1, 3))
 	{
-		if (collision.contains(1))
-		{
-			cubeTouching = true;
-		}
-		else if (collision.contains(2))
-		{
-			coneTouching = true;
-		}
-		else if (collision.contains(3))
-		{
-			sphereTouching = true;
-		}
-		else if (collision.contains(4))
-		{
-			meshTouching = true;
-		}
+		cubeSphereTouching = true;
 	}
 	//std::cout << "Collision between: " << po1 << " and " << po2 << std::endl;
+}
+
+void callbackStartTest(PhysicsCollision collision)
+{
+	//Collision between box and ground
+	if (collision.contains(1, 3))
+	{
+		cubeStartTouching = true;
+	}
+}
+
+void callbackEndTest(PhysicsCollision collision)
+{
+	//Collision between box and ground
+	if (collision.contains(1, 3))
+	{
+		cubeEndTouching = true;
+	}
 }
