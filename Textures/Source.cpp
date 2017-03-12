@@ -179,9 +179,9 @@ int main()
 
 	PhysicsWorld* world = new PhysicsWorld(1.0f, false);
 	
-	world->setCollisionFunction(callbackTest);
-	world->setCollisionStartFunction(callbackStartTest);
-	world->setCollisionEndFunction(callbackEndTest);
+	//world->setCollisionFunction(callbackTest);
+	//world->setCollisionStartFunction(callbackStartTest);
+	//world->setCollisionEndFunction(callbackEndTest);
 
 	//==================//
 	//Set up the objects//
@@ -250,7 +250,7 @@ int main()
 	dynamicObjects.push_back(terrainObject);
 	*/
 
-	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 5.0, glm::vec3(0, 10, 6), glm::vec3(0, 0, 0), world);
+	PhysicsBox bigBox = PhysicsBox(true, 1.0, 1.0, 1.0, 5.0, glm::vec3(0, 10, 3), glm::vec3(0, 0, 0), world);
 	bigBox.setCollisionID(1);
 	Mesh bigBoxMesh(getCubeVertices(1.0), getCubeIndices(), glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	GameObject bigBoxObject(&bigBoxMesh, glm::vec3(0.0f, 0.0f, 0.0f), &bigBox);
@@ -264,13 +264,13 @@ int main()
 	dynamicObjects.push_back(mediumConeObject);
 	*/
 
-	/*
-	PhysicsBall mediumBall(glm::vec3(-5, 10, -5), world);
-	mediumBall.setCollisionID(3);
+	
+	PhysicsBall mediumBall(glm::vec3(-3, 10, 0), world);
+	mediumBall.setCollisionID(6);
 	Mesh mediumBallMesh(GetSphereVertices(10, 10, 0.5), GetSphereIndices(10, 10), glm::vec4(0.0f, 0.8f, 0.8f, 1.0f));
 	GameObject mediumBallObject(&mediumBallMesh, glm::vec3(0.0, 0.0, 0.0), &mediumBall);
 	dynamicObjects.push_back(mediumBallObject);
-	*/
+	
 
 	/*
 	PhysicsConvexMesh testMesh(true, "model/square_frustum.obj", 1.0, glm::vec3(-3, 10, -3), glm::vec3(135, 0, 0), world);
@@ -289,11 +289,19 @@ int main()
 	//Mesh littleBoxMesh(getCylinderVertices(0.5, 0.5, 0.5), getConeIndices(), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	//GameObject littleBoxObject(&littleBoxMesh, glm::vec3(0.0, 0.0, 0.0), &littleCylinder);
 	
+	/*
 	PhysicsBox groundBox(false, 15.0, 15.0, 15.0, 10.0, glm::vec3(0, -7, 0), glm::vec3(2, 0, 0), world);
 	groundBox.setCollisionID(3);
 	Mesh groundMesh(getCubeVertices(15.0), getCubeIndices(), glm::vec4(0.0f, 0.2f, 0.8f, 1.0f));
 	GameObject groundObject(&groundMesh, glm::vec3(0.0, 0.0, 0.0), &groundBox);
 	dynamicObjects.push_back(groundObject);
+	*/
+
+	PhysicsConcaveMesh groundShape("model/arena.obj", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(0.0f, 0.0f, 20.0f), world);
+	groundShape.setCollisionID(3);
+	Mesh groundConcaveShape(GetMeshVertices("model/arena.obj"), GetMeshIndices("model/arena.obj"), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	GameObject groundConcaveObject(&groundConcaveShape, glm::vec3(0.0f), &groundShape);
+	dynamicObjects.push_back(groundConcaveObject);
 
 	//==============//
 	//Light position//
@@ -385,10 +393,10 @@ int main()
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	
-		cubeSphereTouching = false;
+		cubeSphereTouching = world->areColliding(1, 3);
 		cubeStartTouching = false;
 		cubeEndTouching = false;
-		
+
 		//================//
 		// Run simulation //
 		//================//
